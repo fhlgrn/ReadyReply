@@ -106,11 +106,22 @@ export function FilterItem({ filter }: FilterItemProps) {
             </div>
           </div>
           <div>
-            <h4 className="text-sm font-medium mb-2 text-neutral-600">Response Template</h4>
-            <div className="border border-neutral-200 rounded-lg p-3 bg-neutral-50">
-              <div className="text-sm text-neutral-600 line-clamp-3">
-                {filter.responseTemplate || "No template specified"}
+            <h4 className="text-sm font-medium mb-2 text-neutral-600">Gemini AI Response</h4>
+            <div className="border border-blue-100 rounded-lg p-3 bg-blue-50">
+              <div className="text-sm text-blue-700">
+                <span className="material-icons text-blue-600 text-sm mr-1 align-middle">smart_toy</span>
+                When emails match this filter, Gemini will generate a contextual response that addresses specific points
+                in the email.
               </div>
+              
+              {filter.responseTemplate && (
+                <div className="mt-2 pt-2 border-t border-blue-200">
+                  <div className="text-xs font-medium text-blue-800 mb-1">Custom Instructions:</div>
+                  <div className="text-sm text-blue-700 line-clamp-3">
+                    {filter.responseTemplate}
+                  </div>
+                </div>
+              )}
             </div>
             <div className="flex justify-end mt-3">
               <Button 
@@ -118,7 +129,7 @@ export function FilterItem({ filter }: FilterItemProps) {
                 className="text-blue-600 hover:bg-neutral-100 px-3 py-1.5 rounded-md text-sm"
                 onClick={() => setEditDialogOpen(true)}
               >
-                Edit Template
+                Edit Instructions
               </Button>
             </div>
           </div>

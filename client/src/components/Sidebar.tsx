@@ -16,8 +16,7 @@ export function Sidebar({ mobileOpen, onClose }: SidebarProps) {
   
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: 'dashboard' },
-    { name: 'Email Filters', path: '/filters', icon: 'filter_list' },
-    { name: 'AI Responses', path: '/templates', icon: 'smart_toy' },
+    { name: 'Gemini Filters', path: '/filters', icon: 'smart_toy' },
     { name: 'Processing Logs', path: '/logs', icon: 'history' },
     { name: 'Settings', path: '/settings', icon: 'settings' },
     { name: 'Setup Guide', path: '/setup', icon: 'help' },

@@ -6,7 +6,6 @@ import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/Dashboard";
 import EmailFilters from "@/pages/EmailFilters";
-import ResponseTemplates from "@/pages/ResponseTemplates";
 import ProcessingLogs from "@/pages/ProcessingLogs";
 import Settings from "@/pages/Settings";
 import GmailCallback from "@/pages/GmailCallback";
@@ -18,7 +17,6 @@ function Router() {
     <Switch>
       <Route path="/" component={Dashboard} />
       <Route path="/filters" component={EmailFilters} />
-      <Route path="/templates" component={ResponseTemplates} />
       <Route path="/logs" component={ProcessingLogs} />
       <Route path="/settings" component={Settings} />
       <Route path="/setup" component={Setup} />
