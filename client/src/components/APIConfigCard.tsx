@@ -36,7 +36,11 @@ export function APIConfigCard({ type }: ApiCardProps) {
 
   // Update local settings when the server settings change
   useEffect(() => {
-    if (settings) {
+    if (settings && 
+        (localSettings.gmailCheckFrequency === undefined || 
+         localSettings.gmailRateLimit === undefined || 
+         localSettings.geminiModel === undefined || 
+         localSettings.geminiRateLimit === undefined)) {
       setLocalSettings({
         gmailCheckFrequency: settings.gmailCheckFrequency,
         gmailRateLimit: settings.gmailRateLimit,
@@ -44,7 +48,7 @@ export function APIConfigCard({ type }: ApiCardProps) {
         geminiRateLimit: settings.geminiRateLimit,
       });
     }
-  }, [settings]);
+  }, [settings, localSettings]);
 
   const isGmail = type === 'gmail';
   const title = isGmail ? 'Gmail API Configuration' : 'Gemini API Configuration';
