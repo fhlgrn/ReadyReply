@@ -30,7 +30,7 @@ export function Sidebar({ mobileOpen, onClose }: SidebarProps) {
       <div className="p-4 border-b border-neutral-200">
         <div className="flex items-center">
           <img src="https://www.gstatic.com/images/branding/product/1x/gmail_48dp.png" alt="Gmail Logo" className="h-8 w-auto mr-2" />
-          <span className="text-xl font-medium text-neutral-900">Gmail-Claude</span>
+          <span className="text-xl font-medium text-neutral-900">ReadyReply</span>
         </div>
         <p className="text-neutral-600 text-sm mt-1">Automated email responses</p>
       </div>
