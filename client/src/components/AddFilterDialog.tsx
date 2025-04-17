@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -103,6 +104,9 @@ export function AddFilterDialog({ open, onOpenChange, editFilter }: AddFilterDia
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>{isEditing ? 'Edit Filter' : 'Add New Filter'}</DialogTitle>
+          <DialogDescription>
+            {isEditing ? 'Modify the filter settings below' : 'Create a new email filter with the settings below'}
+          </DialogDescription>
         </DialogHeader>
         
         <Form {...form}>
