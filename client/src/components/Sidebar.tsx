@@ -17,7 +17,7 @@ export function Sidebar({ mobileOpen, onClose }: SidebarProps) {
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: 'dashboard' },
     { name: 'Email Filters', path: '/filters', icon: 'filter_list' },
-    { name: 'Response Templates', path: '/templates', icon: 'description' },
+    { name: 'AI Responses', path: '/templates', icon: 'smart_toy' },
     { name: 'Processing Logs', path: '/logs', icon: 'history' },
     { name: 'Settings', path: '/settings', icon: 'settings' },
     { name: 'Setup Guide', path: '/setup', icon: 'help' },
@@ -33,7 +33,7 @@ export function Sidebar({ mobileOpen, onClose }: SidebarProps) {
           <img src="https://www.gstatic.com/images/branding/product/1x/gmail_48dp.png" alt="Gmail Logo" className="h-8 w-auto mr-2" />
           <span className="text-xl font-medium text-neutral-900">ReadyReply</span>
         </div>
-        <p className="text-neutral-600 text-sm mt-1">Automated email responses</p>
+        <p className="text-neutral-600 text-sm mt-1">Gemini-powered email responses</p>
       </div>
       
       <nav className="p-2 flex-1 overflow-y-auto">

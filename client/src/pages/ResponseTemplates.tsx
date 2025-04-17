@@ -19,9 +19,9 @@ export default function ResponseTemplates() {
   return (
     <>
       <header className="mb-6">
-        <h1 className="text-2xl font-medium text-neutral-900">AI Email Responses</h1>
+        <h1 className="text-2xl font-medium text-neutral-900">Gemini Email Responses</h1>
         <p className="text-neutral-600">
-          AI generates contextual responses based on email content
+          Gemini AI generates contextual responses based on email content
         </p>
       </header>
       
@@ -81,9 +81,9 @@ export default function ResponseTemplates() {
                         </div>
                         
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                          <h3 className="text-sm font-medium text-blue-800 mb-2">AI Response</h3>
+                          <h3 className="text-sm font-medium text-blue-800 mb-2">Gemini AI Response</h3>
                           <p className="text-sm text-blue-700">
-                            When emails match this filter, the AI will generate a contextual response
+                            When emails match this filter, Gemini will generate a contextual response
                             that addresses the specific points in the email, maintaining a professional tone
                             and keeping responses concise.
                           </p>
@@ -110,9 +110,9 @@ export default function ResponseTemplates() {
         <div>
           <Card>
             <CardContent className="p-4">
-              <h2 className="text-lg font-medium mb-4">Response Features</h2>
+              <h2 className="text-lg font-medium mb-4">Gemini Response Features</h2>
               <p className="text-sm text-neutral-600 mb-4">
-                The AI will create personalized responses to emails based on their content.
+                The Gemini AI will create personalized responses to emails based on their content.
               </p>
               
               <div className="space-y-3">
