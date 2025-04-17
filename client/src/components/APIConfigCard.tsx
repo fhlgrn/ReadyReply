@@ -16,7 +16,7 @@ import {
 import { Label } from '@/components/ui/label';
 
 interface ApiCardProps {
-  type: 'gmail' | 'claude';
+  type: 'gmail' | 'gemini';
 }
 
 export function APIConfigCard({ type }: ApiCardProps) {
@@ -28,14 +28,14 @@ export function APIConfigCard({ type }: ApiCardProps) {
   const { updateApiKey, isPending: isClaudeAuthPending } = useClaudeAuth();
 
   const isGmail = type === 'gmail';
-  const title = isGmail ? 'Gmail API Configuration' : 'Claude API Configuration';
+  const title = isGmail ? 'Gmail API Configuration' : 'Gemini API Configuration';
   const logo = isGmail 
     ? "https://www.gstatic.com/images/branding/product/1x/gmail_48dp.png"
-    : "https://www.anthropic.com/images/favicon.ico";
+    : "https://lh3.googleusercontent.com/J1vR9T0YSMhSjCnbhkKgQJEy8vVwBauGcHaqvKx61QZnJJ0xMcEMdwucMqLiQLZi3zXBmLHCJUU5UEbb-lY_";
 
   const connectedStatus = isGmail 
     ? status?.gmail?.connected 
-    : status?.claude?.connected;
+    : status?.gemini?.connected;
 
   const handleSaveSettings = () => {
     if (isGmail) {
@@ -45,8 +45,8 @@ export function APIConfigCard({ type }: ApiCardProps) {
       });
     } else {
       updateSettings({
-        claudeModel: settings?.claudeModel,
-        claudeRateLimit: settings?.claudeRateLimit
+        geminiModel: settings?.geminiModel,
+        geminiRateLimit: settings?.geminiRateLimit
       });
     }
   };
@@ -61,7 +61,7 @@ export function APIConfigCard({ type }: ApiCardProps) {
     if (isGmail) {
       updateSettings({ gmailRateLimit: value[0] });
     } else {
-      updateSettings({ claudeRateLimit: value[0] });
+      updateSettings({ geminiRateLimit: value[0] });
     }
   };
 
@@ -77,7 +77,7 @@ export function APIConfigCard({ type }: ApiCardProps) {
     <Card className="bg-white h-full">
       <CardContent className="p-4">
         <div className="flex items-center mb-4">
-          <img src={logo} alt={`${isGmail ? 'Gmail' : 'Claude'} API`} className="h-6 w-auto mr-2" />
+          <img src={logo} alt={`${isGmail ? 'Gmail' : 'Gemini'} API`} className="h-6 w-auto mr-2" />
           <h2 className="text-lg font-medium">{title}</h2>
         </div>
         
@@ -86,8 +86,8 @@ export function APIConfigCard({ type }: ApiCardProps) {
             <span className={`inline-block w-3 h-3 rounded-full ${connectedStatus ? 'bg-green-600' : 'bg-red-600'} mr-2`}></span>
             <span className="text-neutral-600">
               {connectedStatus 
-                ? `Connected to ${isGmail ? 'Gmail' : 'Claude'} API` 
-                : `Not connected to ${isGmail ? 'Gmail' : 'Claude'} API`}
+                ? `Connected to ${isGmail ? 'Gmail' : 'Gemini'} API` 
+                : `Not connected to ${isGmail ? 'Gmail' : 'Gemini'} API`}
             </span>
           </div>
           <p className="text-neutral-600 text-xs mt-1">
@@ -120,14 +120,14 @@ export function APIConfigCard({ type }: ApiCardProps) {
           ) : (
             <div>
               <label className="block text-neutral-600 text-sm font-medium mb-1">Model Selection</label>
-              <Select value={settings?.claudeModel} onValueChange={(val) => updateSettings({ claudeModel: val })}>
+              <Select value={settings?.geminiModel} onValueChange={(val) => updateSettings({ geminiModel: val })}>
                 <SelectTrigger className="bg-neutral-100 border-neutral-200">
-                  <SelectValue placeholder="Select Claude model" />
+                  <SelectValue placeholder="Select Gemini model" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="claude-3-7-sonnet-20250219">Claude 3 Sonnet</SelectItem>
-                  <SelectItem value="claude-3-haiku-20240307">Claude 3 Haiku</SelectItem>
-                  <SelectItem value="claude-3-opus-20240229">Claude 3 Opus</SelectItem>
+                  <SelectItem value="gemini-1.5-pro">Gemini 1.5 Pro</SelectItem>
+                  <SelectItem value="gemini-1.5-flash">Gemini 1.5 Flash</SelectItem>
+                  <SelectItem value="gemini-1.0-pro">Gemini 1.0 Pro</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -140,12 +140,12 @@ export function APIConfigCard({ type }: ApiCardProps) {
                 min={1} 
                 max={100} 
                 step={1}
-                defaultValue={[isGmail ? settings?.gmailRateLimit || 25 : settings?.claudeRateLimit || 15]} 
+                defaultValue={[isGmail ? settings?.gmailRateLimit || 25 : settings?.geminiRateLimit || 15]} 
                 onValueChange={handleRateLimit}
                 className="w-full mr-2"
               />
               <span className="min-w-12 text-sm text-neutral-600">
-                {isGmail ? settings?.gmailRateLimit : settings?.claudeRateLimit}/min
+                {isGmail ? settings?.gmailRateLimit : settings?.geminiRateLimit}/min
               </span>
             </div>
           </div>
@@ -161,13 +161,13 @@ export function APIConfigCard({ type }: ApiCardProps) {
         </div>
       </CardContent>
 
-      {/* API Key Dialog for Claude */}
+      {/* API Key Dialog for Gemini */}
       <Dialog open={apiKeyDialogOpen} onOpenChange={setApiKeyDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Enter Claude API Key</DialogTitle>
+            <DialogTitle>Enter Gemini API Key</DialogTitle>
             <DialogDescription>
-              Enter your Anthropic API key to connect to Claude.
+              Enter your Google API key to connect to Gemini.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleApiKeySubmit}>
@@ -179,7 +179,7 @@ export function APIConfigCard({ type }: ApiCardProps) {
                   type="password"
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
-                  placeholder="sk-ant-api03-..."
+                  placeholder="AIzaSyC..."
                   required
                 />
               </div>
