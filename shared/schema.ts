@@ -23,8 +23,8 @@ export const appSettings = pgTable("app_settings", {
   serviceEnabled: boolean("service_enabled").notNull().default(true),
   gmailCheckFrequency: integer("gmail_check_frequency").notNull().default(5), // in minutes
   gmailRateLimit: integer("gmail_rate_limit").notNull().default(25), // requests per minute
-  claudeModel: text("claude_model").notNull().default("claude-3-7-sonnet-20250219"),
-  claudeRateLimit: integer("claude_rate_limit").notNull().default(15), // requests per minute
+  geminiModel: text("gemini_model").notNull().default("gemini-1.5-pro"),
+  geminiRateLimit: integer("gemini_rate_limit").notNull().default(15), // requests per minute
 });
 
 export const insertAppSettingsSchema = createInsertSchema(appSettings).omit({
@@ -96,7 +96,7 @@ export type AppStats = typeof appStats.$inferSelect;
 // Auth tokens
 export const authTokens = pgTable("auth_tokens", {
   id: serial("id").primaryKey(),
-  provider: text("provider").notNull(), // gmail or claude
+  provider: text("provider").notNull(), // gmail or gemini
   accessToken: text("access_token").notNull(),
   refreshToken: text("refresh_token"),
   expiresAt: timestamp("expires_at"),

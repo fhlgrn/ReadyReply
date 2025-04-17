@@ -3,7 +3,6 @@ import {
   type InsertAppSettings, type InsertFilter, type InsertProcessingLog, 
   type InsertAppStats, type InsertAuthToken, User, InsertUser
 } from "@shared/schema";
-
 export interface IStorage {
   // Original user methods
   getUser(id: number): Promise<User | undefined>;
@@ -64,8 +63,8 @@ export class MemStorage implements IStorage {
       serviceEnabled: true,
       gmailCheckFrequency: 5,
       gmailRateLimit: 25,
-      claudeModel: "claude-3-7-sonnet-20250219",
-      claudeRateLimit: 15
+      geminiModel: "gemini-1.5-pro",
+      geminiRateLimit: 15
     };
     
     // Initialize with default stats
@@ -121,6 +120,11 @@ export class MemStorage implements IStorage {
     const newFilter: Filter = { 
       ...filter, 
       id,
+      enabled: filter.enabled ?? true,
+      fromEmail: filter.fromEmail ?? null,
+      subjectContains: filter.subjectContains ?? null,
+      bodyContains: filter.bodyContains ?? null,
+      hasNoLabel: filter.hasNoLabel ?? null,
       createdAt: new Date()
     };
     this.filters.set(id, newFilter);
@@ -160,7 +164,9 @@ export class MemStorage implements IStorage {
     const newLog: ProcessingLog = {
       ...log,
       id,
-      processedAt: new Date()
+      processedAt: new Date(),
+      errorMessage: log.errorMessage ?? null,
+      draftId: log.draftId ?? null
     };
     this.logs.set(id, newLog);
     return newLog;
@@ -205,11 +211,16 @@ export class MemStorage implements IStorage {
     const newToken: AuthToken = {
       ...token,
       id,
-      lastAuthenticated: new Date()
+      lastAuthenticated: new Date(),
+      refreshToken: token.refreshToken ?? null,
+      expiresAt: token.expiresAt ?? null
     };
     this.tokens.set(token.provider, newToken);
     return newToken;
   }
 }
 
-export const storage = new MemStorage();
+import { DatabaseStorage } from './database-storage';
+
+// Switch from memory storage to database storage
+export const storage = new DatabaseStorage();
