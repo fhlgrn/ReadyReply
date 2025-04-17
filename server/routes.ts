@@ -47,17 +47,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   router.post("/auth/gmail/callback", async (req: Request, res: Response) => {
     const { code } = req.body;
+    console.log('Received Gmail auth callback with code length:', code ? code.length : 0);
     
     if (!code) {
+      console.error('Error: Authorization code is missing in request');
       return res.status(400).json({ message: "Authorization code is required" });
     }
     
-    const success = await gmailService.handleAuthCode(code);
-    
-    if (success) {
-      res.json({ success: true });
-    } else {
-      res.status(400).json({ message: "Failed to authenticate with Gmail" });
+    try {
+      console.log('Attempting to handle auth code...');
+      const success = await gmailService.handleAuthCode(code);
+      
+      if (success) {
+        console.log('Gmail auth successful, tokens saved');
+        res.json({ success: true });
+      } else {
+        console.error('Gmail auth failed, no error thrown but success=false');
+        res.status(400).json({ message: "Failed to authenticate with Gmail" });
+      }
+    } catch (error) {
+      console.error('Exception during Gmail auth code handling:', error);
+      res.status(500).json({ 
+        message: "Error processing Gmail authorization",
+        error: error.message 
+      });
     }
   });
   

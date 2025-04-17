@@ -13,6 +13,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
 interface ApiCardProps {
@@ -31,7 +32,15 @@ export function APIConfigCard({ type }: ApiCardProps) {
 
   const { settings, updateSettings, isUpdating } = useAppSettings();
   const { status, isLoading: statusLoading } = useAuthStatus();
-  const { initiateAuth: initiateGmailAuth, isPending: isGmailAuthPending } = useGmailAuth();
+  const { 
+    initiateAuth: initiateGmailAuth, 
+    isPending: isGmailAuthPending,
+    showAuthCodeDialog,
+    setShowAuthCodeDialog,
+    manualCode,
+    setManualCode,
+    submitManualCode
+  } = useGmailAuth();
   const { updateApiKey, isPending: isGeminiAuthPending } = useGeminiAuth();
 
   // Update local settings when the server settings change
@@ -229,6 +238,41 @@ export function APIConfigCard({ type }: ApiCardProps) {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Gmail Auth Code Dialog */}
+      <Dialog open={showAuthCodeDialog} onOpenChange={setShowAuthCodeDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enter Gmail Authorization Code</DialogTitle>
+            <DialogDescription>
+              After authorizing in the popup window, paste the authorization code here.
+              If you didn't see a code, check the browser popup window or go back to the
+              authorization page and try again.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="authCode">Authorization Code</Label>
+              <Textarea
+                id="authCode"
+                value={manualCode}
+                onChange={(e) => setManualCode(e.target.value)}
+                placeholder="Enter the code from Google's authorization page..."
+                className="h-24"
+                required
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setShowAuthCodeDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={submitManualCode} disabled={!manualCode}>
+              Connect
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </Card>

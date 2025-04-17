@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { AppSettings, Filter, AppStats, ProcessingLog, PaginatedLogs, AuthStatus } from './types';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest } from './queryClient';
@@ -79,6 +79,8 @@ export function useAuthStatus() {
 export function useGmailAuth() {
   const { toast } = useToast();
   const [authUrl, setAuthUrl] = useState('');
+  const [showAuthCodeDialog, setShowAuthCodeDialog] = useState(false);
+  const [manualCode, setManualCode] = useState('');
   
   const getAuthUrlQuery = useQuery({
     queryKey: ['/api/auth/gmail/url'],
@@ -100,6 +102,7 @@ export function useGmailAuth() {
         title: 'Gmail connected',
         description: 'Successfully connected to Gmail',
       });
+      setShowAuthCodeDialog(false);
     },
     onError: (error) => {
       toast({
@@ -111,17 +114,28 @@ export function useGmailAuth() {
   });
   
   const initiateAuth = () => {
-    getAuthUrlQuery.refetch();
+    getAuthUrlQuery.refetch().then(() => {
+      // After getting the auth URL, show dialog for manual code entry
+      setShowAuthCodeDialog(true);
+    });
   };
   
-  // Extract code from URL when redirected back from Google OAuth
+  // Open Google's OAuth page in a new window when we have the URL
   useEffect(() => {
     if (authUrl && !authCallbackMutation.isPending) {
-      window.open(authUrl, 'gmailAuth', 'width=600,height=600');
+      // Open the authorization URL in a new window/tab
+      window.open(authUrl, 'gmailAuth', 'width=800,height=600');
+      
+      // Show instructions to the user
+      toast({
+        title: 'Gmail Authorization',
+        description: 'Please complete the authorization in the opened window, then copy the code and paste it in the dialog.',
+        duration: 10000,
+      });
     }
   }, [authUrl]);
   
-  // Listen for message from popup window
+  // Listen for message from popup window (in case it works)
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       console.log("Received message event:", event.origin, event.data);
@@ -129,6 +143,7 @@ export function useGmailAuth() {
       if (event.data && event.data.type === 'GMAIL_AUTH_CODE') {
         console.log("Got Gmail auth code, submitting to server");
         authCallbackMutation.mutate(event.data.code);
+        setShowAuthCodeDialog(false);
       }
     };
     
@@ -137,10 +152,21 @@ export function useGmailAuth() {
     return () => window.removeEventListener('message', handleMessage);
   }, [authCallbackMutation]);
   
+  const submitManualCode = useCallback(() => {
+    if (manualCode) {
+      authCallbackMutation.mutate(manualCode);
+    }
+  }, [manualCode, authCallbackMutation]);
+  
   return {
     initiateAuth,
     isPending: getAuthUrlQuery.isFetching || authCallbackMutation.isPending,
     isSuccess: authCallbackMutation.isSuccess,
+    showAuthCodeDialog,
+    setShowAuthCodeDialog,
+    manualCode,
+    setManualCode,
+    submitManualCode
   };
 }
 
