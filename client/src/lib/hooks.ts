@@ -124,16 +124,36 @@ export function useGmailAuth() {
         const { url } = result.data;
         if (url) {
           // Open the window first
-          window.open(url, 'gmailAuth', 'width=800,height=600');
+          const authWindow = window.open(url, 'gmailAuth', 'width=800,height=600');
+          
+          if (!authWindow) {
+            toast({
+              title: 'Popup Blocked',
+              description: 'Please allow popups and try again',
+              variant: 'destructive'
+            });
+            return;
+          }
           
           // Show instructions to the user
           toast({
             title: 'Gmail Authorization',
-            description: 'Please complete the authorization in the opened window, then copy the code and paste it in the dialog.',
+            description: 'Please complete the authorization in the opened window. The code will be automatically captured.',
             duration: 10000,
           });
+          
+          // Only show manual entry dialog as fallback
+          setTimeout(() => {
+            if (!authCallbackMutation.isSuccess) {
+              setShowAuthCodeDialog(true);
+              toast({
+                title: 'Manual Code Entry',
+                description: 'If automatic detection fails, please copy the code manually.',
+                duration: 5000,
+              });
+            }
+          }, 30000);
         }
-        setShowAuthCodeDialog(true);
       }
     });
   }, [getAuthUrlQuery, toast]);
