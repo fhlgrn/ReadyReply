@@ -10,7 +10,7 @@ document.getElementsByTagName('head')[0].appendChild(meta);
 
 // Add title
 const title = document.createElement('title');
-title.textContent = 'Gmail-Claude Integration';
+title.textContent = 'Gmail-Gemini Integration';
 document.getElementsByTagName('head')[0].appendChild(title);
 
 // Render the app
