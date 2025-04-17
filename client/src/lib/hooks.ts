@@ -133,7 +133,7 @@ export function useGmailAuth() {
         duration: 10000,
       });
     }
-  }, [authUrl]);
+  }, [authUrl, authCallbackMutation.isPending, toast]);
   
   // Listen for message from popup window (in case it works)
   useEffect(() => {

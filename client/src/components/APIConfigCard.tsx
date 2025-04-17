@@ -243,15 +243,25 @@ export function APIConfigCard({ type }: ApiCardProps) {
 
       {/* Gmail Auth Code Dialog */}
       <Dialog open={showAuthCodeDialog} onOpenChange={setShowAuthCodeDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Enter Gmail Authorization Code</DialogTitle>
             <DialogDescription>
-              After authorizing in the popup window, paste the authorization code here.
-              If you didn't see a code, check the browser popup window or go back to the
-              authorization page and try again.
+              After authorizing in the popup window, copy and paste the authorization code here.
             </DialogDescription>
           </DialogHeader>
+          
+          <div className="my-4 p-3 bg-amber-50 border border-amber-200 rounded-md text-sm">
+            <h4 className="font-semibold text-amber-800 mb-2">Authorization Instructions</h4>
+            <ol className="list-decimal pl-5 space-y-2 text-amber-700">
+              <li>A new window should have opened with Google's authorization page</li>
+              <li>Select your Google account and grant the requested permissions</li>
+              <li>After approval, you'll see a code displayed on screen</li>
+              <li>Copy that code and paste it in the box below</li>
+              <li>If the window didn't open, check your popup blocker settings</li>
+            </ol>
+          </div>
+          
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="authCode">Authorization Code</Label>
@@ -265,6 +275,18 @@ export function APIConfigCard({ type }: ApiCardProps) {
               />
             </div>
           </div>
+          
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md text-sm">
+            <h4 className="font-semibold text-blue-800 mb-2">Troubleshooting Tips</h4>
+            <ul className="list-disc pl-5 space-y-1 text-blue-700">
+              <li>Make sure you've set up a Google Cloud Project with the Gmail API enabled</li>
+              <li>Ensure your OAuth consent screen is properly configured</li>
+              <li>Verify that your OAuth credentials include the correct redirect URI</li>
+              <li>If you're still having issues, try using the authorization code directly from 
+                  the Google authorization page's URL (after <code>code=</code> and before <code>&scope</code>)</li>
+            </ul>
+          </div>
+          
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setShowAuthCodeDialog(false)}>
               Cancel

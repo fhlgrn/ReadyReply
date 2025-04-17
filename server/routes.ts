@@ -65,11 +65,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error('Gmail auth failed, no error thrown but success=false');
         res.status(400).json({ message: "Failed to authenticate with Gmail" });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Exception during Gmail auth code handling:', error);
       res.status(500).json({ 
         message: "Error processing Gmail authorization",
-        error: error.message 
+        error: error.message || String(error)
       });
     }
   });

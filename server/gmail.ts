@@ -58,14 +58,19 @@ export class GmailService {
   // Generate authentication URL for user to authorize the app
   getAuthUrl(): string {
     console.log("Generating Gmail Auth URL with scopes:", SCOPES);
+    console.log("Redirect URI configured as:", process.env.GMAIL_REDIRECT_URI);
     
+    // For now we'll continue using the configured redirect URI but
+    // we've added a manual code entry option in the UI to help users connect
     const url = this.oauth2Client.generateAuthUrl({
       access_type: 'offline',
       scope: SCOPES,
-      prompt: 'consent' // Force to show the consent screen
+      prompt: 'consent', // Force to show the consent screen
+      // Add detailed instructions in the URL to make it clear what to do
+      state: 'copy-code-to-ready-reply-app'
     });
     
-    console.log("Generated Auth URL:", url.substring(0, 50) + "...");
+    console.log("Full generated Auth URL:", url);
     return url;
   }
   
