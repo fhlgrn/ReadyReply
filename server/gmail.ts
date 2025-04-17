@@ -127,6 +127,11 @@ export class GmailService {
       if (filter.hasNoLabel) {
         query += `-label:${filter.hasNoLabel} `;
       }
+      
+      // Add filter for starred emails if specified
+      if (filter.isStarred) {
+        query += 'is:starred ';
+      }
 
       // Only get unread messages by default
       query += 'is:unread ';

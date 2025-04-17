@@ -38,6 +38,7 @@ const formSchema = z.object({
   subjectContains: z.string().optional(),
   bodyContains: z.string().optional(),
   hasNoLabel: z.string().optional(),
+  isStarred: z.boolean().default(false),
   responseTemplate: z.string().min(1, 'Response template is required'),
 });
 
@@ -54,6 +55,7 @@ export function AddFilterDialog({ open, onOpenChange, editFilter }: AddFilterDia
       subjectContains: editFilter.subjectContains || '',
       bodyContains: editFilter.bodyContains || '',
       hasNoLabel: editFilter.hasNoLabel || '',
+      isStarred: editFilter.isStarred || false,
       responseTemplate: editFilter.responseTemplate,
     } : {
       name: '',
@@ -62,25 +64,28 @@ export function AddFilterDialog({ open, onOpenChange, editFilter }: AddFilterDia
       subjectContains: '',
       bodyContains: '',
       hasNoLabel: '',
+      isStarred: false,
       responseTemplate: 'Thank you for your email. I received your message regarding [TOPIC] and will address your concerns about [SPECIFIC POINTS]. [CUSTOM RESPONSE BASED ON EMAIL CONTENT].\n\nBest regards,\n[YOUR NAME]',
     },
   });
   
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    // Clean up empty strings
-    const cleanedData = Object.fromEntries(
-      Object.entries(data).map(([key, value]) => {
-        if (typeof value === 'string' && value.trim() === '') {
-          return [key, undefined];
-        }
-        return [key, value];
-      })
-    );
+    // Create a filter data object with the correct type
+    const filterData = {
+      name: data.name,
+      enabled: data.enabled,
+      fromEmail: data.fromEmail && data.fromEmail.trim() !== '' ? data.fromEmail : undefined,
+      subjectContains: data.subjectContains && data.subjectContains.trim() !== '' ? data.subjectContains : undefined,
+      bodyContains: data.bodyContains && data.bodyContains.trim() !== '' ? data.bodyContains : undefined,
+      hasNoLabel: data.hasNoLabel && data.hasNoLabel.trim() !== '' ? data.hasNoLabel : undefined,
+      isStarred: data.isStarred,
+      responseTemplate: data.responseTemplate
+    };
     
     if (isEditing && editFilter) {
-      await updateFilter({ id: editFilter.id, ...cleanedData });
+      await updateFilter({ id: editFilter.id, ...filterData });
     } else {
-      await createFilter(cleanedData);
+      await createFilter(filterData);
     }
     onOpenChange(false);
   };
@@ -209,6 +214,29 @@ export function AddFilterDialog({ open, onOpenChange, editFilter }: AddFilterDia
                           Comma-separated keywords
                         </FormDescription>
                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <div className="col-span-2">
+                  <FormField
+                    control={form.control}
+                    name="isStarred"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <div className="space-y-0.5">
+                          <FormLabel>Starred Emails Only</FormLabel>
+                          <FormDescription>
+                            Only match emails that are starred
+                          </FormDescription>
+                        </div>
+                        <FormControl>
+                          <ToggleSwitch
+                            checked={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
                       </FormItem>
                     )}
                   />
