@@ -39,6 +39,8 @@ const formSchema = z.object({
   bodyContains: z.string().optional(),
   hasNoLabel: z.string().optional(),
   isStarred: z.boolean().default(false),
+  inInbox: z.boolean().default(true),
+  inPrimaryCategory: z.boolean().default(false),
   responseTemplate: z.string().min(1, 'Response template is required'),
 });
 
@@ -56,6 +58,8 @@ export function AddFilterDialog({ open, onOpenChange, editFilter }: AddFilterDia
       bodyContains: editFilter.bodyContains || '',
       hasNoLabel: editFilter.hasNoLabel || '',
       isStarred: editFilter.isStarred || false,
+      inInbox: editFilter.inInbox ?? true,
+      inPrimaryCategory: editFilter.inPrimaryCategory || false,
       responseTemplate: editFilter.responseTemplate,
     } : {
       name: '',
@@ -65,6 +69,8 @@ export function AddFilterDialog({ open, onOpenChange, editFilter }: AddFilterDia
       bodyContains: '',
       hasNoLabel: '',
       isStarred: false,
+      inInbox: true,
+      inPrimaryCategory: false,
       responseTemplate: 'Please address the sender professionally and focus on the key points raised in their email.',
     },
   });
@@ -79,6 +85,8 @@ export function AddFilterDialog({ open, onOpenChange, editFilter }: AddFilterDia
       bodyContains: data.bodyContains && data.bodyContains.trim() !== '' ? data.bodyContains : undefined,
       hasNoLabel: data.hasNoLabel && data.hasNoLabel.trim() !== '' ? data.hasNoLabel : undefined,
       isStarred: data.isStarred,
+      inInbox: data.inInbox,
+      inPrimaryCategory: data.inPrimaryCategory,
       responseTemplate: data.responseTemplate
     };
     
@@ -229,6 +237,52 @@ export function AddFilterDialog({ open, onOpenChange, editFilter }: AddFilterDia
                           <FormLabel>Starred Emails Only</FormLabel>
                           <FormDescription>
                             Only match emails that are starred
+                          </FormDescription>
+                        </div>
+                        <FormControl>
+                          <ToggleSwitch
+                            checked={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <div className="col-span-2 md:col-span-1">
+                  <FormField
+                    control={form.control}
+                    name="inInbox"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <div className="space-y-0.5">
+                          <FormLabel>Inbox Only</FormLabel>
+                          <FormDescription>
+                            Only match emails in the inbox
+                          </FormDescription>
+                        </div>
+                        <FormControl>
+                          <ToggleSwitch
+                            checked={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <div className="col-span-2 md:col-span-1">
+                  <FormField
+                    control={form.control}
+                    name="inPrimaryCategory"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <div className="space-y-0.5">
+                          <FormLabel>Primary Category</FormLabel>
+                          <FormDescription>
+                            Only match emails in the Primary category
                           </FormDescription>
                         </div>
                         <FormControl>

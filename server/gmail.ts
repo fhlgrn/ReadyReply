@@ -133,6 +133,16 @@ export class GmailService {
         query += 'is:starred ';
       }
 
+      // Filter emails in inbox only if specified
+      if (filter.inInbox) {
+        query += 'in:inbox ';
+      }
+
+      // Filter emails in primary category if specified
+      if (filter.inPrimaryCategory) {
+        query += 'category:primary ';
+      }
+
       // Only get unread messages by default
       query += 'is:unread ';
 

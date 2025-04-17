@@ -44,6 +44,8 @@ export const filters = pgTable("filters", {
   bodyContains: text("body_contains"),
   hasNoLabel: text("has_no_label"),
   isStarred: boolean("is_starred").default(false),
+  inInbox: boolean("in_inbox").default(true),
+  inPrimaryCategory: boolean("in_primary_category").default(false),
   responseTemplate: text("response_template").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

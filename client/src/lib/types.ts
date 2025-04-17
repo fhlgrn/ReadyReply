@@ -17,6 +17,8 @@ export interface Filter {
   bodyContains?: string;
   hasNoLabel?: string;
   isStarred?: boolean;
+  inInbox?: boolean;
+  inPrimaryCategory?: boolean;
   responseTemplate: string;
   createdAt: string;
 }

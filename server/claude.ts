@@ -108,7 +108,16 @@ export class ClaudeService {
         messages: [{ role: 'user', content: prompt }],
       });
       
-      return response.content[0].text || "";
+      // Process the response and extract text from the content block
+      let responseText = "";
+      if (response.content && response.content.length > 0) {
+        const contentBlock = response.content[0];
+        // Check if it's a TextBlock (which has a text property)
+        if (contentBlock.type === 'text') {
+          responseText = contentBlock.text;
+        }
+      }
+      return responseText;
     } catch (error) {
       console.error('Error generating draft reply:', error);
       throw error;
