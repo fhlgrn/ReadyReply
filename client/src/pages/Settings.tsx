@@ -78,6 +78,25 @@ export default function Settings() {
                 </Select>
                 <p className="text-sm text-neutral-500">How often the service checks for new emails</p>
               </div>
+              
+              <div className="space-y-3">
+                <Label className="text-base">Response Word Limit</Label>
+                <div className="flex items-center">
+                  <Slider
+                    min={25}
+                    max={150}
+                    step={5}
+                    value={[settings?.maxResponseWords || 75]}
+                    onValueChange={(value) => updateSettings({ maxResponseWords: value[0] })}
+                    disabled={isUpdating}
+                    className="w-full mr-2"
+                  />
+                  <span className="min-w-16 text-sm text-neutral-600">
+                    {settings?.maxResponseWords || 75} words
+                  </span>
+                </div>
+                <p className="text-sm text-neutral-500">Maximum number of words in generated email responses</p>
+              </div>
             </div>
           </CardContent>
         </Card>

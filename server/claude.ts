@@ -78,8 +78,9 @@ export class ClaudeService {
         await this.initialize();
       }
       
-      // Get the current model from settings
+      // Get the current model and word limit from settings
       const settings = await storage.getAppSettings();
+      const maxWords = settings.maxResponseWords || 75;
       
       // Prepare the prompt for Claude
       const prompt = `
@@ -91,27 +92,23 @@ export class ClaudeService {
         
         ${email.body}
         
-        Please write a draft reply following this general template:
-        ${template}
-        
-        Your draft should:
-        1. Be professionally written and maintain a friendly tone
-        2. Address the specific points raised in the original email
-        3. Follow the structure of the template but adapt it to this specific email
-        4. Be concise but complete
-        5. End with an appropriate sign-off
-        6. DO NOT include generic placeholders - provide a complete, ready-to-send response
+        Please write a draft reply that:
+        1. Is professionally written and maintains a friendly tone
+        2. Addresses the specific points raised in the original email
+        3. Is concise but complete, with NO MORE THAN ${maxWords} WORDS
+        4. Ends with an appropriate sign-off
+        5. Is a complete, ready-to-send response
         
         Reply as if you are me, without mentioning that you're an AI.
       `;
       
       const response = await this.anthropic.messages.create({
-        model: settings.claudeModel,
+        model: 'claude-3-7-sonnet-20250219',
         max_tokens: 1024,
         messages: [{ role: 'user', content: prompt }],
       });
       
-      return response.content[0].text;
+      return response.content[0].text || "";
     } catch (error) {
       console.error('Error generating draft reply:', error);
       throw error;

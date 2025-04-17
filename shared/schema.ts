@@ -25,6 +25,7 @@ export const appSettings = pgTable("app_settings", {
   gmailRateLimit: integer("gmail_rate_limit").notNull().default(25), // requests per minute
   geminiModel: text("gemini_model").notNull().default("gemini-1.5-pro"),
   geminiRateLimit: integer("gemini_rate_limit").notNull().default(15), // requests per minute
+  maxResponseWords: integer("max_response_words").notNull().default(75), // maximum words in generated response
 });
 
 export const insertAppSettingsSchema = createInsertSchema(appSettings).omit({

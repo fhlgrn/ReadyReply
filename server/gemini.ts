@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { storage } from './storage';
 
 export class GeminiService {
   private genAI: GoogleGenerativeAI | null = null;
@@ -53,9 +54,13 @@ export class GeminiService {
     try {
       const model = this.genAI.getGenerativeModel({ model: this.model });
       
-      // Create a system prompt from the template
+      // Get the settings for word limit
+      const settings = await storage.getAppSettings();
+      const maxWords = settings.maxResponseWords || 75;
+      
+      // Create a system prompt
       const prompt = `
-      You are tasked with creating a draft email reply based on the template below.
+      You are tasked with creating a concise draft email reply.
       Analyze the incoming email details and create a personalized response that addresses the sender's concerns.
       
       Incoming Email:
@@ -63,10 +68,14 @@ export class GeminiService {
       Subject: ${email.subject}
       Body: ${email.body}
       
-      Response Template:
-      ${template}
+      Draft a personalized email response that:
+      1. Is professionally written with a friendly tone
+      2. Addresses the specific points in the email
+      3. Is concise, using NO MORE THAN ${maxWords} WORDS
+      4. Ends with an appropriate sign-off
+      5. Is a complete, ready-to-send response
       
-      Draft a personalized email response following the style and structure of the template, but adapted to address the specific content of the incoming email.
+      Reply as if you are the recipient, without mentioning that you're an AI.
       `;
 
       const result = await model.generateContent(prompt);

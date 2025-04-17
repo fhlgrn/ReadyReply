@@ -5,6 +5,7 @@ export interface AppSettings {
   gmailRateLimit: number;
   geminiModel: string;
   geminiRateLimit: number;
+  maxResponseWords: number;
 }
 
 export interface Filter {
@@ -15,6 +16,7 @@ export interface Filter {
   subjectContains?: string;
   bodyContains?: string;
   hasNoLabel?: string;
+  isStarred?: boolean;
   responseTemplate: string;
   createdAt: string;
 }
