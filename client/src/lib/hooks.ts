@@ -124,14 +124,18 @@ export function useGmailAuth() {
   // Listen for message from popup window
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      console.log("Received message event:", event.origin, event.data);
+      
       if (event.data && event.data.type === 'GMAIL_AUTH_CODE') {
+        console.log("Got Gmail auth code, submitting to server");
         authCallbackMutation.mutate(event.data.code);
       }
     };
     
+    console.log("Setting up message event listener");
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  }, [authCallbackMutation]);
   
   return {
     initiateAuth,

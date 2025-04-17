@@ -15,6 +15,12 @@ export class GmailService {
   private gmail: any;
   
   constructor() {
+    console.log("Initializing Gmail Service with credentials:", {
+      clientId: process.env.GMAIL_CLIENT_ID ? "Present" : "Missing",
+      clientSecret: process.env.GMAIL_CLIENT_SECRET ? "Present" : "Missing",
+      redirectUri: process.env.GMAIL_REDIRECT_URI ? process.env.GMAIL_REDIRECT_URI : "Missing"
+    });
+    
     this.oauth2Client = new google.auth.OAuth2(
       process.env.GMAIL_CLIENT_ID,
       process.env.GMAIL_CLIENT_SECRET,
@@ -51,17 +57,30 @@ export class GmailService {
   
   // Generate authentication URL for user to authorize the app
   getAuthUrl(): string {
-    return this.oauth2Client.generateAuthUrl({
+    console.log("Generating Gmail Auth URL with scopes:", SCOPES);
+    
+    const url = this.oauth2Client.generateAuthUrl({
       access_type: 'offline',
       scope: SCOPES,
       prompt: 'consent' // Force to show the consent screen
     });
+    
+    console.log("Generated Auth URL:", url.substring(0, 50) + "...");
+    return url;
   }
   
   // Handle the authorization code from oauth callback
   async handleAuthCode(code: string): Promise<boolean> {
     try {
+      console.log("Handling auth code:", code.substring(0, 10) + "...");
+      
       const { tokens } = await this.oauth2Client.getToken(code);
+      console.log("Received tokens:", {
+        access_token: tokens.access_token ? "Present (length: " + tokens.access_token.length + ")" : "Missing",
+        refresh_token: tokens.refresh_token ? "Present" : "Missing",
+        expiry_date: tokens.expiry_date ? new Date(tokens.expiry_date).toISOString() : "Missing"
+      });
+      
       await this.saveTokens(tokens);
       return true;
     } catch (error) {
@@ -253,3 +272,4 @@ export class GmailService {
 
 // Export a singleton instance
 export const gmailService = new GmailService();
+console.log('Testing Gmail Auth Process in Server Logs')
