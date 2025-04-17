@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AppSettings, Filter, AppStats, ProcessingLog, PaginatedLogs, AuthStatus } from './types';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest } from './queryClient';
@@ -78,15 +78,19 @@ export function useAuthStatus() {
 // Gmail Auth
 export function useGmailAuth() {
   const { toast } = useToast();
-  const [authUrl, setAuthUrl] = useState('');
   const [showAuthCodeDialog, setShowAuthCodeDialog] = useState(false);
   const [manualCode, setManualCode] = useState('');
+  const urlDataRef = React.useRef<{ url: string, redirectUri: string } | null>(null);
   
   const getAuthUrlQuery = useQuery({
     queryKey: ['/api/auth/gmail/url'],
     enabled: false,
     select: (data: any) => {
-      setAuthUrl(data.url);
+      // Store the URL and redirect URI in the ref instead of setting state
+      urlDataRef.current = {
+        url: data.url,
+        redirectUri: data.redirectUri
+      };
       return data;
     },
   });
@@ -113,32 +117,34 @@ export function useGmailAuth() {
     },
   });
   
-  const initiateAuth = () => {
-    getAuthUrlQuery.refetch().then(() => {
-      // After getting the auth URL, show dialog for manual code entry
-      setShowAuthCodeDialog(true);
+  const initiateAuth = useCallback(() => {
+    getAuthUrlQuery.refetch().then((result) => {
+      if (result.isSuccess && result.data) {
+        // After getting the auth URL, open the window and show dialog for manual code entry
+        const { url } = result.data;
+        if (url) {
+          // Open the window first
+          window.open(url, 'gmailAuth', 'width=800,height=600');
+          
+          // Show instructions to the user
+          toast({
+            title: 'Gmail Authorization',
+            description: 'Please complete the authorization in the opened window, then copy the code and paste it in the dialog.',
+            duration: 10000,
+          });
+        }
+        setShowAuthCodeDialog(true);
+      }
     });
-  };
-  
-  // Open Google's OAuth page in a new window when we have the URL
-  useEffect(() => {
-    if (authUrl && !authCallbackMutation.isPending) {
-      // Open the authorization URL in a new window/tab
-      window.open(authUrl, 'gmailAuth', 'width=800,height=600');
-      
-      // Show instructions to the user
-      toast({
-        title: 'Gmail Authorization',
-        description: 'Please complete the authorization in the opened window, then copy the code and paste it in the dialog.',
-        duration: 10000,
-      });
-    }
-  }, [authUrl, authCallbackMutation.isPending, toast]);
+  }, [getAuthUrlQuery, toast]);
   
   // Listen for message from popup window (in case it works)
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       console.log("Received message event:", event.origin, event.data);
+      
+      // Check if message is from our redirect URI
+      const redirectUri = urlDataRef.current?.redirectUri || '';
       
       if (event.data && event.data.type === 'GMAIL_AUTH_CODE') {
         console.log("Got Gmail auth code, submitting to server");

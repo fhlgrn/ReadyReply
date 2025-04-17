@@ -42,7 +42,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication
   router.get("/auth/gmail/url", (req: Request, res: Response) => {
     const authUrl = gmailService.getAuthUrl();
-    res.json({ url: authUrl });
+    res.json({ 
+      url: authUrl,
+      redirectUri: process.env.GMAIL_REDIRECT_URI || 'not-set'
+    });
   });
   
   router.post("/auth/gmail/callback", async (req: Request, res: Response) => {
