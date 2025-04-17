@@ -51,7 +51,7 @@ export default function ResponseTemplates() {
       <header className="mb-6">
         <h1 className="text-2xl font-medium text-neutral-900">Response Templates</h1>
         <p className="text-neutral-600">
-          Manage templates that Claude will use to generate email responses
+          Manage templates that Gemini will use to generate email responses
         </p>
       </header>
       
@@ -136,7 +136,7 @@ export default function ResponseTemplates() {
             <CardContent className="p-4">
               <h2 className="text-lg font-medium mb-4">Template Variables</h2>
               <p className="text-sm text-neutral-600 mb-4">
-                Use these placeholders in your templates. Claude will replace them with relevant content.
+                Use these placeholders in your templates. Gemini will replace them with relevant content.
               </p>
               
               <div className="space-y-3">
@@ -153,7 +153,7 @@ export default function ResponseTemplates() {
                 <ul className="mt-2 text-sm text-yellow-700 space-y-1 list-disc list-inside">
                   <li>Keep templates professional but conversational</li>
                   <li>Include placeholders for personalized content</li>
-                  <li>Claude works best with clear instructions</li>
+                  <li>Gemini works best with clear instructions</li>
                   <li>Review generated drafts before sending</li>
                 </ul>
               </div>
