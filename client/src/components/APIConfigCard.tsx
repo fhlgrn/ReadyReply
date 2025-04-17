@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import geminiLogoPath from '../assets/gemini-logo.svg';
+import geminiLogoPath from '../assets/images/Google_Gemini_logo.svg';
 
 interface ApiCardProps {
   type: 'gmail' | 'gemini';
@@ -119,8 +119,12 @@ export function APIConfigCard({ type }: ApiCardProps) {
     <Card className="bg-white h-full">
       <CardContent className="p-4">
         <div className="flex items-center mb-4">
-          <img src={logo} alt={`${isGmail ? 'Gmail' : 'Gemini'} API`} className="h-6 w-auto mr-2" />
-          <h2 className="text-lg font-medium">{title}</h2>
+          <img 
+            src={logo} 
+            alt={`${isGmail ? 'Gmail' : 'Gemini'} API`} 
+            className={`${isGmail ? 'h-6 w-auto' : 'h-10 w-auto'} mr-2`} 
+          />
+          {isGmail && <h2 className="text-lg font-medium">{title}</h2>}
         </div>
 
         <div className="mb-4">
