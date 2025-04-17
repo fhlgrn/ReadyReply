@@ -58,9 +58,10 @@ export function APIConfigCard({ type }: ApiCardProps) {
   };
 
   const handleRateLimit = (value: number[]) => {
-    if (isGmail) {
+    // Only update when the value has actually changed
+    if (isGmail && settings?.gmailRateLimit !== value[0]) {
       updateSettings({ gmailRateLimit: value[0] });
-    } else {
+    } else if (!isGmail && settings?.geminiRateLimit !== value[0]) {
       updateSettings({ geminiRateLimit: value[0] });
     }
   };
@@ -105,7 +106,13 @@ export function APIConfigCard({ type }: ApiCardProps) {
           {isGmail ? (
             <div>
               <label className="block text-neutral-600 text-sm font-medium mb-1">Check Frequency</label>
-              <Select value={String(settings?.gmailCheckFrequency)} onValueChange={(val) => updateSettings({ gmailCheckFrequency: Number(val) })}>
+              <Select 
+                value={String(settings?.gmailCheckFrequency)} 
+                onValueChange={(val) => {
+                  if (String(settings?.gmailCheckFrequency) !== val) {
+                    updateSettings({ gmailCheckFrequency: Number(val) });
+                  }
+                }}>
                 <SelectTrigger className="bg-neutral-100 border-neutral-200">
                   <SelectValue placeholder="Select frequency" />
                 </SelectTrigger>
@@ -120,7 +127,13 @@ export function APIConfigCard({ type }: ApiCardProps) {
           ) : (
             <div>
               <label className="block text-neutral-600 text-sm font-medium mb-1">Model Selection</label>
-              <Select value={settings?.geminiModel} onValueChange={(val) => updateSettings({ geminiModel: val })}>
+              <Select 
+                value={settings?.geminiModel} 
+                onValueChange={(val) => {
+                  if (settings?.geminiModel !== val) {
+                    updateSettings({ geminiModel: val });
+                  }
+                }}>
                 <SelectTrigger className="bg-neutral-100 border-neutral-200">
                   <SelectValue placeholder="Select Gemini model" />
                 </SelectTrigger>
@@ -140,8 +153,8 @@ export function APIConfigCard({ type }: ApiCardProps) {
                 min={1} 
                 max={100} 
                 step={1}
-                defaultValue={[isGmail ? settings?.gmailRateLimit || 25 : settings?.geminiRateLimit || 15]} 
-                onValueChange={handleRateLimit}
+                value={[isGmail ? settings?.gmailRateLimit || 25 : settings?.geminiRateLimit || 15]} 
+                onValueCommit={handleRateLimit}
                 className="w-full mr-2"
               />
               <span className="min-w-12 text-sm text-neutral-600">
