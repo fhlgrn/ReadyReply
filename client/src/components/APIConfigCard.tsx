@@ -16,6 +16,10 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
+// Import local logo assets
+import gmailLogo from '../assets/gmail_logo.png';
+import geminiLogo from '../assets/Google_Gemini_logo.png';
+
 interface ApiCardProps {
   type: 'gmail' | 'gemini';
 }
@@ -61,9 +65,7 @@ export function APIConfigCard({ type }: ApiCardProps) {
 
   const isGmail = type === 'gmail';
   const title = isGmail ? 'Gmail API Configuration' : 'Gemini API Configuration';
-  const logo = isGmail 
-    ? "https://www.gstatic.com/images/branding/product/1x/gmail_48dp.png"
-    : "https://lh3.googleusercontent.com/J1vR9T0YSMhSjCnbhkKgQJEy8vVwBauGcHaqvKx61QZnJJ0xMcEMdwucMqLiQLZi3zXBmLHCJUU5UEbb-lY_";
+  const logo = isGmail ? gmailLogo : geminiLogo;
 
   const connectedStatus = isGmail 
     ? status?.gmail?.connected 
