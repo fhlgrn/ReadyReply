@@ -108,7 +108,7 @@ export function APIConfigCard({ type }: ApiCardProps) {
           <img src={logo} alt={`${isGmail ? 'Gmail' : 'Gemini'} API`} className="h-6 w-auto mr-2" />
           <h2 className="text-lg font-medium">{title}</h2>
         </div>
-        
+
         <div className="mb-4">
           <div className="flex items-center text-sm">
             <span className={`inline-block w-3 h-3 rounded-full ${connectedStatus ? 'bg-green-600' : 'bg-red-600'} mr-2`}></span>
@@ -128,7 +128,7 @@ export function APIConfigCard({ type }: ApiCardProps) {
                 : 'Not authenticated'}
           </p>
         </div>
-        
+
         <div className="space-y-4">
           {isGmail ? (
             <div>
@@ -164,7 +164,7 @@ export function APIConfigCard({ type }: ApiCardProps) {
               </Select>
             </div>
           )}
-          
+
           <div>
             <label className="block text-neutral-600 text-sm font-medium mb-1">API Rate Limit</label>
             <div className="flex items-center">
@@ -181,7 +181,7 @@ export function APIConfigCard({ type }: ApiCardProps) {
               </span>
             </div>
           </div>
-          
+
           <div className="flex justify-end">
             <Button variant="outline" onClick={handleReconnect} disabled={isGmailAuthPending || isGeminiAuthPending} className="mr-2">
               {isGmail ? 'Reconnect' : 'Edit API Key'}

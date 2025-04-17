@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { StatusCard } from '@/components/StatusCard';
 import { APIConfigCard } from '@/components/APIConfigCard';
@@ -16,7 +17,7 @@ export default function Dashboard() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <APIConfigCard type="gmail" />
-        <APIConfigCard type="claude" />
+        <APIConfigCard type="gemini" />
       </div>
       
       <FilterList />
