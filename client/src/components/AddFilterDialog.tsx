@@ -65,7 +65,7 @@ export function AddFilterDialog({ open, onOpenChange, editFilter }: AddFilterDia
       bodyContains: '',
       hasNoLabel: '',
       isStarred: false,
-      responseTemplate: 'Thank you for your email. I received your message regarding [TOPIC] and will address your concerns about [SPECIFIC POINTS]. [CUSTOM RESPONSE BASED ON EMAIL CONTENT].\n\nBest regards,\n[YOUR NAME]',
+      responseTemplate: 'Please address the sender professionally and focus on the key points raised in their email.',
     },
   });
   
@@ -245,7 +245,7 @@ export function AddFilterDialog({ open, onOpenChange, editFilter }: AddFilterDia
             </div>
             
             <div>
-              <h3 className="text-sm font-medium mb-2">Response Template</h3>
+              <h3 className="text-sm font-medium mb-2">Response Context Information</h3>
               <FormField
                 control={form.control}
                 name="responseTemplate"
@@ -253,13 +253,13 @@ export function AddFilterDialog({ open, onOpenChange, editFilter }: AddFilterDia
                   <FormItem>
                     <FormControl>
                       <Textarea 
-                        placeholder="Thank you for contacting our support team..." 
+                        placeholder="Optional context for AI to consider when generating responses..." 
                         className="min-h-32"
                         {...field} 
                       />
                     </FormControl>
                     <FormDescription>
-                      Claude will use this as a guideline when creating draft replies
+                      AI will generate context-aware responses based on the email's content
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
