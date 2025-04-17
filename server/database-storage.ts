@@ -86,18 +86,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteFilter(id: number): Promise<boolean> {
-    const result = await db.delete(filters).where(eq(filters.id, id));
-    return result.count > 0;
+    await db.delete(filters).where(eq(filters.id, id));
+    // Check if the filter still exists to determine success
+    const filter = await this.getFilter(id);
+    return filter === undefined;
   }
 
   // Processing logs
   async getLogs(page: number, limit: number): Promise<{ logs: ProcessingLog[]; total: number }> {
-    // Get total count
-    const [countResult] = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(processingLogs);
-    
-    const total = countResult?.count || 0;
+    // Get total count by counting all records
+    const allLogs = await db.select().from(processingLogs);
+    const total = allLogs.length;
     
     // Get paginated logs
     const offset = (page - 1) * limit;

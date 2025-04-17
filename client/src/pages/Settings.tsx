@@ -175,7 +175,6 @@ export default function Settings() {
                       value={settings?.geminiModel} 
                       onValueChange={(val) => updateSettings({ geminiModel: val })}
                       disabled={isUpdating}
-                      className="max-w-md"
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select Gemini model" />
