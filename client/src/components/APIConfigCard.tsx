@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { useAppSettings, useAuthStatus, useGmailAuth, useClaudeAuth } from '@/lib/hooks';
+import { useAppSettings, useAuthStatus, useGmailAuth, useGeminiAuth } from '@/lib/hooks';
 import {
   Dialog,
   DialogContent,
@@ -25,7 +25,7 @@ export function APIConfigCard({ type }: ApiCardProps) {
   const { settings, updateSettings, isUpdating } = useAppSettings();
   const { status, isLoading: statusLoading } = useAuthStatus();
   const { initiateAuth: initiateGmailAuth, isPending: isGmailAuthPending } = useGmailAuth();
-  const { updateApiKey, isPending: isClaudeAuthPending } = useClaudeAuth();
+  const { updateApiKey, isPending: isGeminiAuthPending } = useGeminiAuth();
 
   const isGmail = type === 'gmail';
   const title = isGmail ? 'Gmail API Configuration' : 'Gemini API Configuration';
@@ -151,7 +151,7 @@ export function APIConfigCard({ type }: ApiCardProps) {
           </div>
           
           <div className="flex justify-end">
-            <Button variant="outline" onClick={handleReconnect} disabled={isGmailAuthPending || isClaudeAuthPending} className="mr-2">
+            <Button variant="outline" onClick={handleReconnect} disabled={isGmailAuthPending || isGeminiAuthPending} className="mr-2">
               {isGmail ? 'Reconnect' : 'Edit API Key'}
             </Button>
             <Button onClick={handleSaveSettings} disabled={isUpdating}>

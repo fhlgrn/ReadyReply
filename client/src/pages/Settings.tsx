@@ -13,23 +13,23 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ToggleSwitch } from '@/components/ToggleSwitch';
-import { useAppSettings, useGmailAuth, useClaudeAuth, useAuthStatus } from '@/lib/hooks';
+import { useAppSettings, useGmailAuth, useGeminiAuth, useAuthStatus } from '@/lib/hooks';
 
 export default function Settings() {
   const { settings, updateSettings, isUpdating } = useAppSettings();
   const { initiateAuth: initiateGmailAuth, isPending: isGmailAuthPending } = useGmailAuth();
-  const { updateApiKey, isPending: isClaudeAuthPending } = useClaudeAuth();
+  const { updateApiKey, isPending: isGeminiAuthPending } = useGeminiAuth();
   const { status } = useAuthStatus();
-  const [claudeApiKey, setClaudeApiKey] = React.useState('');
+  const [geminiApiKey, setGeminiApiKey] = React.useState('');
   
   const handleToggleService = (checked: boolean) => {
     updateSettings({ serviceEnabled: checked });
   };
   
-  const handleUpdateClaudeApiKey = () => {
-    if (claudeApiKey) {
-      updateApiKey(claudeApiKey);
-      setClaudeApiKey('');
+  const handleUpdateGeminiApiKey = () => {
+    if (geminiApiKey) {
+      updateApiKey(geminiApiKey);
+      setGeminiApiKey('');
     }
   };
   
@@ -132,15 +132,15 @@ export default function Settings() {
                 </div>
               </div>
               
-              {/* Claude API */}
+              {/* Gemini API */}
               <div>
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <Label className="text-base">Claude API</Label>
+                    <Label className="text-base">Gemini API</Label>
                     <div className="flex items-center mt-1">
-                      <span className={`inline-block w-3 h-3 rounded-full ${status?.claude?.connected ? 'bg-green-600' : 'bg-red-600'} mr-2`}></span>
+                      <span className={`inline-block w-3 h-3 rounded-full ${status?.gemini?.connected ? 'bg-green-600' : 'bg-red-600'} mr-2`}></span>
                       <span className="text-sm text-neutral-600">
-                        {status?.claude?.connected 
+                        {status?.gemini?.connected 
                           ? 'Connected' 
                           : 'Not connected'}
                       </span>
@@ -150,21 +150,21 @@ export default function Settings() {
                 
                 <div className="space-y-3">
                   <div>
-                    <Label className="text-sm">Anthropic API Key</Label>
+                    <Label className="text-sm">Google API Key</Label>
                     <div className="flex mt-1">
                       <Input
                         type="password"
-                        value={claudeApiKey}
-                        onChange={(e) => setClaudeApiKey(e.target.value)}
-                        placeholder="sk-ant-api03-..."
+                        value={geminiApiKey}
+                        onChange={(e) => setGeminiApiKey(e.target.value)}
+                        placeholder="AIzaSyC..."
                         className="max-w-md"
                       />
                       <Button 
-                        onClick={handleUpdateClaudeApiKey} 
-                        disabled={isClaudeAuthPending || !claudeApiKey}
+                        onClick={handleUpdateGeminiApiKey} 
+                        disabled={isGeminiAuthPending || !geminiApiKey}
                         className="ml-2"
                       >
-                        {status?.claude?.connected ? 'Update Key' : 'Connect'}
+                        {status?.gemini?.connected ? 'Update Key' : 'Connect'}
                       </Button>
                     </div>
                   </div>
@@ -172,18 +172,18 @@ export default function Settings() {
                   <div>
                     <Label className="text-sm">Model Selection</Label>
                     <Select 
-                      value={settings?.claudeModel} 
-                      onValueChange={(val) => updateSettings({ claudeModel: val })}
+                      value={settings?.geminiModel} 
+                      onValueChange={(val) => updateSettings({ geminiModel: val })}
                       disabled={isUpdating}
                       className="max-w-md"
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select Claude model" />
+                        <SelectValue placeholder="Select Gemini model" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="claude-3-7-sonnet-20250219">Claude 3 Sonnet</SelectItem>
-                        <SelectItem value="claude-3-haiku-20240307">Claude 3 Haiku</SelectItem>
-                        <SelectItem value="claude-3-opus-20240229">Claude 3 Opus</SelectItem>
+                        <SelectItem value="gemini-1.5-pro">Gemini 1.5 Pro</SelectItem>
+                        <SelectItem value="gemini-1.5-flash">Gemini 1.5 Flash</SelectItem>
+                        <SelectItem value="gemini-1.0-pro">Gemini 1.0 Pro</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -195,13 +195,13 @@ export default function Settings() {
                         min={1}
                         max={100}
                         step={1}
-                        value={[settings?.claudeRateLimit || 15]}
-                        onValueChange={(value) => updateSettings({ claudeRateLimit: value[0] })}
+                        value={[settings?.geminiRateLimit || 15]}
+                        onValueChange={(value) => updateSettings({ geminiRateLimit: value[0] })}
                         disabled={isUpdating}
                         className="w-full mr-2"
                       />
                       <span className="min-w-12 text-sm text-neutral-600">
-                        {settings?.claudeRateLimit || 15}/min
+                        {settings?.geminiRateLimit || 15}/min
                       </span>
                     </div>
                   </div>

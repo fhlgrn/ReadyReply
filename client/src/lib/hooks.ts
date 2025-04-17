@@ -83,8 +83,9 @@ export function useGmailAuth() {
   const getAuthUrlQuery = useQuery({
     queryKey: ['/api/auth/gmail/url'],
     enabled: false,
-    onSuccess: (data) => {
+    select: (data: any) => {
       setAuthUrl(data.url);
+      return data;
     },
   });
   
@@ -139,25 +140,25 @@ export function useGmailAuth() {
   };
 }
 
-// Claude Auth
-export function useClaudeAuth() {
+// Gemini Auth
+export function useGeminiAuth() {
   const { toast } = useToast();
   
   const updateApiKeyMutation = useMutation({
     mutationFn: async (apiKey: string) => {
-      const res = await apiRequest('POST', '/api/auth/claude/key', { apiKey });
+      const res = await apiRequest('POST', '/api/auth/gemini/key', { apiKey });
       return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/status'] });
       toast({
-        title: 'Claude API key updated',
-        description: 'Successfully connected to Claude',
+        title: 'Gemini API key updated',
+        description: 'Successfully connected to Gemini',
       });
     },
     onError: (error) => {
       toast({
-        title: 'Error connecting to Claude',
+        title: 'Error connecting to Gemini',
         description: error.message,
         variant: 'destructive',
       });

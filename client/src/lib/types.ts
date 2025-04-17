@@ -3,8 +3,8 @@ export interface AppSettings {
   serviceEnabled: boolean;
   gmailCheckFrequency: number;
   gmailRateLimit: number;
-  claudeModel: string;
-  claudeRateLimit: number;
+  geminiModel: string;
+  geminiRateLimit: number;
 }
 
 export interface Filter {
@@ -48,7 +48,7 @@ export interface AuthStatus {
     connected: boolean;
     email?: string;
   };
-  claude: {
+  gemini: {
     connected: boolean;
   };
 }
