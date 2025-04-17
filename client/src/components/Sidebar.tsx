@@ -20,6 +20,7 @@ export function Sidebar({ mobileOpen, onClose }: SidebarProps) {
     { name: 'Response Templates', path: '/templates', icon: 'description' },
     { name: 'Processing Logs', path: '/logs', icon: 'history' },
     { name: 'Settings', path: '/settings', icon: 'settings' },
+    { name: 'Setup Guide', path: '/setup', icon: 'help' },
   ];
   
   return (

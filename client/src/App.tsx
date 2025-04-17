@@ -10,6 +10,7 @@ import ResponseTemplates from "@/pages/ResponseTemplates";
 import ProcessingLogs from "@/pages/ProcessingLogs";
 import Settings from "@/pages/Settings";
 import GmailCallback from "@/pages/GmailCallback";
+import Setup from "@/pages/Setup";
 import { Sidebar } from "@/components/Sidebar";
 
 function Router() {
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/templates" component={ResponseTemplates} />
       <Route path="/logs" component={ProcessingLogs} />
       <Route path="/settings" component={Settings} />
+      <Route path="/setup" component={Setup} />
       <Route path="/auth/gmail/callback" component={GmailCallback} />
       <Route component={NotFound} />
     </Switch>

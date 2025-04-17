@@ -3,7 +3,7 @@ import React from 'react';
 export default function Setup() {
   return (
     <div className="container mx-auto px-4 py-6 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+      <h1 className="text-3xl font-bold mb-8 text-center">
         ReadyReply Setup Guide
       </h1>
       
@@ -17,7 +17,7 @@ export default function Setup() {
         <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mb-8">
           <h3 className="text-xl font-semibold mb-4">Step 1: Create a Google Cloud Project</h3>
           <ol className="list-decimal pl-6 space-y-3">
-            <li>Go to the <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google Cloud Console</a></li>
+            <li>Go to the Google Cloud Console</li>
             <li>Click on the project dropdown at the top of the page</li>
             <li>Click "New Project"</li>
             <li>Enter a name for your project (e.g. "ReadyReply")</li>
@@ -29,7 +29,7 @@ export default function Setup() {
         <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mb-8">
           <h3 className="text-xl font-semibold mb-4">Step 2: Enable the Gmail API</h3>
           <ol className="list-decimal pl-6 space-y-3">
-            <li>In your Google Cloud project, go to "APIs & Services" > "Library"</li>
+            <li>In your Google Cloud project, go to "APIs & Services" then "Library"</li>
             <li>Search for "Gmail API" and click on it</li>
             <li>Click "Enable"</li>
           </ol>
@@ -38,7 +38,7 @@ export default function Setup() {
         <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mb-8">
           <h3 className="text-xl font-semibold mb-4">Step 3: Configure the OAuth Consent Screen</h3>
           <ol className="list-decimal pl-6 space-y-3">
-            <li>Go to "APIs & Services" > "OAuth consent screen"</li>
+            <li>Go to "APIs & Services" then "OAuth consent screen"</li>
             <li>Select "External" as the user type and click "Create"</li>
             <li>Fill in the required information:
               <ul className="list-disc pl-6 mt-2">
@@ -67,8 +67,8 @@ export default function Setup() {
         <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mb-8">
           <h3 className="text-xl font-semibold mb-4">Step 4: Create OAuth Credentials</h3>
           <ol className="list-decimal pl-6 space-y-3">
-            <li>Go to "APIs & Services" > "Credentials"</li>
-            <li>Click "Create Credentials" > "OAuth client ID"</li>
+            <li>Go to "APIs & Services" then "Credentials"</li>
+            <li>Click "Create Credentials" then "OAuth client ID"</li>
             <li>Select "Web application" as the application type</li>
             <li>Name: "ReadyReply Web Client"</li>
             <li>Under "Authorized JavaScript origins", add:
