@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -22,10 +22,29 @@ interface ApiCardProps {
 export function APIConfigCard({ type }: ApiCardProps) {
   const [apiKeyDialogOpen, setApiKeyDialogOpen] = useState(false);
   const [apiKey, setApiKey] = useState('');
+  const [localSettings, setLocalSettings] = useState<{
+    gmailCheckFrequency?: number;
+    gmailRateLimit?: number;
+    geminiModel?: string;
+    geminiRateLimit?: number;
+  }>({});
+
   const { settings, updateSettings, isUpdating } = useAppSettings();
   const { status, isLoading: statusLoading } = useAuthStatus();
   const { initiateAuth: initiateGmailAuth, isPending: isGmailAuthPending } = useGmailAuth();
   const { updateApiKey, isPending: isGeminiAuthPending } = useGeminiAuth();
+
+  // Update local settings when the server settings change
+  useEffect(() => {
+    if (settings) {
+      setLocalSettings({
+        gmailCheckFrequency: settings.gmailCheckFrequency,
+        gmailRateLimit: settings.gmailRateLimit,
+        geminiModel: settings.geminiModel,
+        geminiRateLimit: settings.geminiRateLimit,
+      });
+    }
+  }, [settings]);
 
   const isGmail = type === 'gmail';
   const title = isGmail ? 'Gmail API Configuration' : 'Gemini API Configuration';
@@ -37,42 +56,50 @@ export function APIConfigCard({ type }: ApiCardProps) {
     ? status?.gmail?.connected 
     : status?.gemini?.connected;
 
-  const handleSaveSettings = () => {
+  // Memoized handlers to prevent recreating on every render
+  const handleSaveSettings = useCallback(() => {
     if (isGmail) {
       updateSettings({
-        gmailCheckFrequency: settings?.gmailCheckFrequency,
-        gmailRateLimit: settings?.gmailRateLimit
+        gmailCheckFrequency: localSettings.gmailCheckFrequency,
+        gmailRateLimit: localSettings.gmailRateLimit
       });
     } else {
       updateSettings({
-        geminiModel: settings?.geminiModel,
-        geminiRateLimit: settings?.geminiRateLimit
+        geminiModel: localSettings.geminiModel,
+        geminiRateLimit: localSettings.geminiRateLimit
       });
     }
-  };
+  }, [isGmail, localSettings, updateSettings]);
 
-  const handleApiKeySubmit = (e: React.FormEvent) => {
+  const handleApiKeySubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     updateApiKey(apiKey);
     setApiKeyDialogOpen(false);
-  };
+  }, [apiKey, updateApiKey]);
 
-  const handleRateLimit = (value: number[]) => {
-    // Only update when the value has actually changed
-    if (isGmail && settings?.gmailRateLimit !== value[0]) {
-      updateSettings({ gmailRateLimit: value[0] });
-    } else if (!isGmail && settings?.geminiRateLimit !== value[0]) {
-      updateSettings({ geminiRateLimit: value[0] });
+  const handleRateLimit = useCallback((value: number[]) => {
+    if (isGmail) {
+      setLocalSettings(prev => ({ ...prev, gmailRateLimit: value[0] }));
+    } else {
+      setLocalSettings(prev => ({ ...prev, geminiRateLimit: value[0] }));
     }
-  };
+  }, [isGmail]);
 
-  const handleReconnect = () => {
+  const handleFrequencyChange = useCallback((val: string) => {
+    setLocalSettings(prev => ({ ...prev, gmailCheckFrequency: Number(val) }));
+  }, []);
+
+  const handleModelChange = useCallback((val: string) => {
+    setLocalSettings(prev => ({ ...prev, geminiModel: val }));
+  }, []);
+
+  const handleReconnect = useCallback(() => {
     if (isGmail) {
       initiateGmailAuth();
     } else {
       setApiKeyDialogOpen(true);
     }
-  };
+  }, [isGmail, initiateGmailAuth]);
 
   return (
     <Card className="bg-white h-full">
@@ -107,12 +134,8 @@ export function APIConfigCard({ type }: ApiCardProps) {
             <div>
               <label className="block text-neutral-600 text-sm font-medium mb-1">Check Frequency</label>
               <Select 
-                value={String(settings?.gmailCheckFrequency)} 
-                onValueChange={(val) => {
-                  if (String(settings?.gmailCheckFrequency) !== val) {
-                    updateSettings({ gmailCheckFrequency: Number(val) });
-                  }
-                }}>
+                value={String(localSettings.gmailCheckFrequency)} 
+                onValueChange={handleFrequencyChange}>
                 <SelectTrigger className="bg-neutral-100 border-neutral-200">
                   <SelectValue placeholder="Select frequency" />
                 </SelectTrigger>
@@ -128,12 +151,8 @@ export function APIConfigCard({ type }: ApiCardProps) {
             <div>
               <label className="block text-neutral-600 text-sm font-medium mb-1">Model Selection</label>
               <Select 
-                value={settings?.geminiModel} 
-                onValueChange={(val) => {
-                  if (settings?.geminiModel !== val) {
-                    updateSettings({ geminiModel: val });
-                  }
-                }}>
+                value={localSettings.geminiModel} 
+                onValueChange={handleModelChange}>
                 <SelectTrigger className="bg-neutral-100 border-neutral-200">
                   <SelectValue placeholder="Select Gemini model" />
                 </SelectTrigger>
@@ -153,12 +172,12 @@ export function APIConfigCard({ type }: ApiCardProps) {
                 min={1} 
                 max={100} 
                 step={1}
-                value={[isGmail ? settings?.gmailRateLimit || 25 : settings?.geminiRateLimit || 15]} 
-                onValueCommit={handleRateLimit}
+                value={[isGmail ? localSettings.gmailRateLimit || 25 : localSettings.geminiRateLimit || 15]} 
+                onValueChange={handleRateLimit}
                 className="w-full mr-2"
               />
               <span className="min-w-12 text-sm text-neutral-600">
-                {isGmail ? settings?.gmailRateLimit : settings?.geminiRateLimit}/min
+                {isGmail ? localSettings.gmailRateLimit : localSettings.geminiRateLimit}/min
               </span>
             </div>
           </div>
