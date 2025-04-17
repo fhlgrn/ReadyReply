@@ -9,6 +9,7 @@ import EmailFilters from "@/pages/EmailFilters";
 import ResponseTemplates from "@/pages/ResponseTemplates";
 import ProcessingLogs from "@/pages/ProcessingLogs";
 import Settings from "@/pages/Settings";
+import GmailCallback from "@/pages/GmailCallback";
 import { Sidebar } from "@/components/Sidebar";
 
 function Router() {
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/templates" component={ResponseTemplates} />
       <Route path="/logs" component={ProcessingLogs} />
       <Route path="/settings" component={Settings} />
+      <Route path="/auth/gmail/callback" component={GmailCallback} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -41,7 +43,7 @@ function App() {
               >
                 <span className="material-icons">menu</span>
               </button>
-              <span className="ml-2 text-lg font-medium">Gmail-Claude</span>
+              <span className="ml-2 text-lg font-medium">ReadyReply</span>
             </div>
             
             <Router />
